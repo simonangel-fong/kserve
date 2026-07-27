@@ -1,0 +1,83 @@
+# open-webui.yaml
+# Chat UI in front of the KServe InferenceServices in the llm namespace.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: open-webui
+  namespace: argocd
+  annotations:
+    # After kserve-llm (wave 5), so the predictor Service exists first.
+    argocd.argoproj.io/sync-wave: "6"
+spec:
+  project: default
+
+  source:
+    repoURL: https://helm.openwebui.com
+    chart: open-webui
+    targetRevision: "15.2.0"
+
+    helm:
+      valuesObject:
+        # The chart bundles Ollama and Pipelines subcharts on by default.
+        # Inference is served by KServe, so neither is wanted here.
+        ollama:
+          enabled: false
+        pipelines:
+          enabled: false
+
+        # The default websocket manager is redis, which pulls in a bundled
+        # Redis deployment. A single replica can use the in-memory manager.
+        websocket:
+          enabled: true
+          manager: ""
+          redis:
+            enabled: false
+
+        replicaCount: 1
+
+        # No PVC: chats, users, and settings are lost on pod restart, which
+        # also means re-registering the first-user admin account each time.
+        persistence:
+          enabled: false
+
+        # Keep off Karpenter-managed capacity, matching the other add-ons.
+        nodeSelector:
+          role: bootstrap
+
+        # KServe's huggingface runtime serves an OpenAI-compatible API.
+        # Path is /openai/v1 on the predictor Service in the llm namespace.
+        enableOpenaiApi: true
+        openaiBaseApiUrls:
+          - "http://qwen-llm-predictor.llm.svc.cluster.local/openai/v1"
+        # KServe does not check this, but the chart requires one key per URL.
+        openaiApiKeys:
+          - "kserve-no-auth"
+
+        service:
+          type: ClusterIP
+          port: 80
+
+        resources:
+          requests:
+            cpu: "200m"
+            memory: 512Mi
+          limits:
+            cpu: "1"
+            memory: 1Gi
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: open-webui
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 15s
+        maxDuration: 3m
