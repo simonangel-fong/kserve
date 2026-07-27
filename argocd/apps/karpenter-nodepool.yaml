@@ -1,12 +1,4 @@
-# Karpenter NodePool + EC2NodeClass.
-#
-# PARKED - not synced. Lives outside argocd/apps/, so the root Application
-# ignores it. Move it back into argocd/apps/ to start provisioning nodes.
-#
-# Split from the karpenter Application because these are custom resources whose
-# CRDs the chart installs. The sync wave holds them back until the controller
-# Application (wave 0) has landed those CRDs. Note its source path still points
-# at argocd/manifests/karpenter - update that when re-enabling.
+# Karpenter NodePools + EC2NodeClasses.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -20,7 +12,7 @@ spec:
   source:
     repoURL: https://github.com/simonangel-fong/kserve.git
     targetRevision: master
-    path: argocd/manifests/karpenter
+    path: argocd/apps/karpenter
 
   destination:
     server: https://kubernetes.default.svc

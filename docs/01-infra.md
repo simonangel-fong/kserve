@@ -45,5 +45,4 @@ kubectl -n argocd port-forward svc/argocd-server 8080:443
 # app-of-apps
 kubectl apply -f argocd/00-root.yaml
 
-
 ```
