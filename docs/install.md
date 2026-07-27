@@ -30,3 +30,21 @@ kubectl get po -n kserve
 
 ```
 
+## Download LLM
+
+```sh
+# linux
+curl -LsSf https://hf.co/cli/install.sh | bash
+
+# windows
+powershell -ExecutionPolicy ByPass -c "irm https://hf.co/cli/install.ps1 | iex"
+
+# confirm
+hf --version
+# 1.24.0
+
+hf models info               
+
+hf download meta-llama/Llama-3.2-1B-Instruct --local-dir ./models/llama       
+
+```

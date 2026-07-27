@@ -20,4 +20,17 @@ locals {
     Env       = var.env
     ManagedBy = "Terraform"
   }
+
+  # ##############################
+  # Network
+  # ##############################
+  vpc_cidr = "10.0.0.0/16"
+  vpc_azs  = slice(data.aws_availability_zones.available.names, 0, 2) # 2 AZs
+
+  # ##############################
+  # EKS
+  # ##############################
+  eks_version             = "1.36"
+  eks_bootstrap_node_type = "t3.medium"
+  eks_bootstrap_node_ami  = "AL2023_x86_64_STANDARD"
 }
