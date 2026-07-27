@@ -33,4 +33,16 @@ locals {
   eks_version             = "1.36"
   eks_bootstrap_node_type = "t3.medium"
   eks_bootstrap_node_ami  = "AL2023_x86_64_STANDARD"
+
+  # ##############################
+  # Karpenter
+  # ##############################
+  karpenter_version   = "1.14.0"
+  karpenter_discovery = local.prefix_name
+
+  # ##############################
+  # Argo CD
+  # ##############################
+  argocd_version   = "10.2.1"
+  argocd_namespace = "argocd"
 }

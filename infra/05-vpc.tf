@@ -27,12 +27,15 @@ module "vpc" {
   enable_nat_gateway = true
   single_nat_gateway = true
 
-  # Tags
+  # public subnet tag: ELB
   public_subnet_tags = {
     "kubernetes.io/role/elb" = "1"
   }
 
+  # private subnet tag: ELB; karpenter
   private_subnet_tags = {
     "kubernetes.io/role/internal-elb" = "1"
+    # Karpenter launches nodes into subnets carrying this tag.
+    "karpenter.sh/discovery" = local.karpenter_discovery
   }
 }

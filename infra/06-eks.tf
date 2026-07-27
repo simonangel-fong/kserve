@@ -53,4 +53,11 @@ module "eks" {
       }
     }
   }
+
+  # ##############################
+  # Karpenter
+  # ##############################
+  node_security_group_tags = {
+    "karpenter.sh/discovery" = local.karpenter_discovery
+  }
 }

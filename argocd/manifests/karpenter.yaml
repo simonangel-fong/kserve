@@ -1,0 +1,51 @@
+# Karpenter controller, reconciled by Argo CD.
+#
+# The IAM role, instance profile and SQS interruption queue this depends on are
+# created by Terraform (infra/07-karpenter.tf). Only the chart lives here.
+#
+# CLUSTER_NAME / CLUSTER_ENDPOINT / QUEUE_NAME below come from `terraform output`
+# in infra/ - substitute them once, then commit.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: karpenter
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: public.ecr.aws/karpenter
+    chart: karpenter
+    targetRevision: "1.14.0"
+
+    helm:
+      valuesObject:
+        settings:
+          clusterName: CLUSTER_NAME
+          clusterEndpoint: CLUSTER_ENDPOINT
+          interruptionQueue: QUEUE_NAME
+
+        # Keep the controller on the managed node group - it must never run on
+        # a node it is itself responsible for deprovisioning.
+        nodeSelector:
+          role: bootstrap
+
+        controller:
+          resources:
+            requests:
+              cpu: "1"
+              memory: 1Gi
+            limits:
+              memory: 1Gi
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      # The chart ships CRDs that must land before the NodePool app syncs.
+      - ServerSideApply=true
