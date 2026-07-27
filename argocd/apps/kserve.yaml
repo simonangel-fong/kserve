@@ -1,54 +1,47 @@
-# # kserve.yaml
-# # KServe controller (kserve-resources chart).
-# # Standard mode (pre-0.19 name: RawDeployment): plain Deployment + HPA,
-# # no Knative/Istio dependency.
-# apiVersion: argoproj.io/v1alpha1
-# kind: Application
-# metadata:
-#   name: kserve
-#   namespace: argocd
-#   annotations:
-#     argocd.argoproj.io/sync-wave: "3"
-# spec:
-#   project: default
+# kserve.yaml
+# KServe controller
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kserve
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
 
-#   source:
-#     repoURL: ghcr.io/kserve/charts
-#     chart: kserve-resources
-#     targetRevision: "v0.19.0"
+  source:
+    repoURL: ghcr.io/kserve/charts
+    chart: kserve-resources
+    targetRevision: "v0.19.0"
 
-#     helm:
-#       valuesObject:
-#         kserve:
-#           controller:
-#             deploymentMode: Standard
+    helm:
+      valuesObject:
+        kserve:
+          controller:
+            deploymentMode: Standard
 
-#             # Controller is a singleton; keep it on the bootstrap nodes
-#             # rather than on Karpenter capacity that can be consolidated away.
-#             nodeSelector:
-#               role: bootstrap
+            nodeSelector:
+              role: bootstrap
 
-#             gateway:
-#               # No ingress wired up yet; reach predictors via port-forward
-#               # or the in-cluster Service.
-#               disableIngressCreation: true
-#               ingressGateway:
-#                 enableGatewayApi: false
+            gateway:
+              disableIngressCreation: true
+              ingressGateway:
+                enableGatewayApi: false
 
-#   destination:
-#     server: https://kubernetes.default.svc
-#     namespace: kserve
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kserve
 
-#   syncPolicy:
-#     automated:
-#       prune: true
-#       selfHeal: true
-#     syncOptions:
-#       - CreateNamespace=true
-#       - ServerSideApply=true
-#     retry:
-#       # The CRDs from kserve-crd may not be established on the first attempt.
-#       limit: 5
-#       backoff:
-#         duration: 15s
-#         maxDuration: 3m
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 15s
+        maxDuration: 3m
