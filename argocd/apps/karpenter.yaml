@@ -20,12 +20,12 @@ spec:
           clusterEndpoint: https://809A851E5891111FE59D6337B59622BD.gr7.us-east-1.eks.amazonaws.com
           interruptionQueue: Karpenter-kserve-dev
 
+        serviceAccount:
+          name: karpenter
+
         nodeSelector:
           role: bootstrap
 
-        # The two t3.medium bootstrap nodes have 1930m allocatable each, ~680m
-        # of it free after system pods. A single replica is all that fits, and
-        # HA buys nothing here - the second replica could not schedule anyway.
         replicas: 1
 
         controller:
