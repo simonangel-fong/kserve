@@ -23,13 +23,18 @@ spec:
         nodeSelector:
           role: bootstrap
 
+        # The two t3.medium bootstrap nodes have 1930m allocatable each, ~680m
+        # of it free after system pods. A single replica is all that fits, and
+        # HA buys nothing here - the second replica could not schedule anyway.
+        replicas: 1
+
         controller:
           resources:
             requests:
-              cpu: "1"
-              memory: 1Gi
+              cpu: 200m
+              memory: 512Mi
             limits:
-              memory: 1Gi
+              memory: 512Mi
 
   destination:
     server: https://kubernetes.default.svc
