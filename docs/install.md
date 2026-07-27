@@ -1,5 +1,3 @@
-
-
 ```sh
 # install cert-manager
 helm install \
@@ -43,9 +41,9 @@ powershell -ExecutionPolicy ByPass -c "irm https://hf.co/cli/install.ps1 | iex"
 hf --version
 # 1.24.0
 
-hf models info               
+hf models info
 
-hf download meta-llama/Llama-3.2-1B-Instruct --local-dir ./models/llama       
+hf download meta-llama/Llama-3.2-1B-Instruct --local-dir ./models/llama
 
 ```
 
@@ -64,7 +62,7 @@ kubectl -n llm get isvc qwen-llm -w
 
 kubectl port-forward -n llm svc/qwen-llm-predictor 8080:80
 
- curl -X POST http://localhost:8080/openai/v1/chat/completions \
+curl -X POST http://localhost:8080/openai/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{"model":"qwen","messages":[{"role":"user","content":"hello"}]}'
 # {"id":"chatcmpl-b7ee3aa748d54b5f","object":"chat.completion","created":1785186894,"model":"qwen","choices":[{"index":0,"message":{"role":"assistant","content":"Hello! How can I assist you today?","refusal":null,"annotations":null,"audio":null,"function_call":null,"tool_calls":[],"reasoning":null},"logprobs":null,"finish_reason":"stop","stop_reason":null,"token_ids":null}],"service_tier":null,"system_fingerprint":null,"usage":{"prompt_tokens":30,"total_tokens":40,"completion_tokens":10,"prompt_tokens_details":null},"prompt_logprobs":null,"prompt_token_ids":null,"kv_transfer_params":null}
@@ -75,6 +73,7 @@ kubectl port-forward -n llm svc/qwen-llm-predictor 8080:80
 - debug
 
 ```sh
-
+# open webui
+kubectl -n open-webui port-forward svc/open-webui 8888:80
 
 ```

@@ -20,6 +20,14 @@ spec:
       # --model_name is what clients send as "model" in the request body.
       args:
         - --model_name=qwen
+        # Open WebUI probes each model with tool_choice="auto". Without these
+        # vLLM rejects the request:
+        #   "auto" tool choice requires --enable-auto-tool-choice and
+        #   --tool-call-parser to be set
+        # vLLM 0.20.0 ships no qwen2.5 parser (only qwen3_*); hermes matches
+        # the tool-call format Qwen2.5-Instruct was trained on.
+        - --enable-auto-tool-choice
+        - --tool-call-parser=hermes
 
       storageUri: "hf://Qwen/Qwen2.5-0.5B-Instruct"
 
