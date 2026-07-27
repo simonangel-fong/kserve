@@ -1,12 +1,10 @@
 # open-webui.yaml
-# Chat UI in front of the KServe InferenceServices in the llm namespace.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: open-webui
   namespace: argocd
   annotations:
-    # After kserve-llm (wave 5), so the predictor Service exists first.
     argocd.argoproj.io/sync-wave: "6"
 spec:
   project: default
@@ -18,15 +16,11 @@ spec:
 
     helm:
       valuesObject:
-        # The chart bundles Ollama and Pipelines subcharts on by default.
-        # Inference is served by KServe, so neither is wanted here.
         ollama:
           enabled: false
         pipelines:
           enabled: false
 
-        # The default websocket manager is redis, which pulls in a bundled
-        # Redis deployment. A single replica can use the in-memory manager.
         websocket:
           enabled: true
           manager: ""
@@ -35,14 +29,35 @@ spec:
 
         replicaCount: 1
 
-        # No PVC: chats, users, and settings are lost on pod restart, which
-        # also means re-registering the first-user admin account each time.
+        # No PVC
         persistence:
           enabled: false
 
-        # Keep off Karpenter-managed capacity, matching the other add-ons.
-        nodeSelector:
-          role: bootstrap
+        # No nodeSelector: unlike cert-manager and the KServe controller, this
+        # is an application rather than cluster infrastructure, so let the
+        # Karpenter general NodePool provision capacity for it.
+
+        # The chart ships no probes, so a wedged pod stays in the Service
+        # endpoints and a rollout reports success before the app is up.
+        startupProbe:
+          httpGet:
+            path: /health
+            port: http
+          periodSeconds: 5
+          failureThreshold: 30
+        # Readiness uses /health/db, per the chart's documented example: it
+        # gates traffic on the database being reachable, not just the process.
+        readinessProbe:
+          httpGet:
+            path: /health/db
+            port: http
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          periodSeconds: 20
+          failureThreshold: 3
 
         # KServe's huggingface runtime serves an OpenAI-compatible API.
         # Path is /openai/v1 on the predictor Service in the llm namespace.

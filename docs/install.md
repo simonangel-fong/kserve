@@ -62,10 +62,13 @@ k get node -l node-role=gpu
 kubectl apply -f kserve/inference.yaml
 kubectl -n llm get isvc qwen-llm -w
 
-kubectl -n llm port-forward svc/qwen-llm-predictor 8080:80
-curl http://localhost:8080/openai/v1/chat/completions \
-  -H 'Content-Type: application/json' \
+kubectl port-forward -n llm svc/qwen-llm-predictor 8080:80
+
+ curl -X POST http://localhost:8080/openai/v1/chat/completions \
+  -H "Content-Type: application/json" \
   -d '{"model":"qwen","messages":[{"role":"user","content":"hello"}]}'
+# {"id":"chatcmpl-b7ee3aa748d54b5f","object":"chat.completion","created":1785186894,"model":"qwen","choices":[{"index":0,"message":{"role":"assistant","content":"Hello! How can I assist you today?","refusal":null,"annotations":null,"audio":null,"function_call":null,"tool_calls":[],"reasoning":null},"logprobs":null,"finish_reason":"stop","stop_reason":null,"token_ids":null}],"service_tier":null,"system_fingerprint":null,"usage":{"prompt_tokens":30,"total_tokens":40,"completion_tokens":10,"prompt_tokens_details":null},"prompt_logprobs":null,"prompt_token_ids":null,"kv_transfer_params":null}
+
 
 ```
 
