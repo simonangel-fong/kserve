@@ -15,10 +15,7 @@ spec:
     targetRevision: master
     path: argocd/apps
     directory:
-      # Top-level files only, no recursion. Subdirectories here hold plain
-      # manifests owned by a child Application - recursing would make the root
-      # a second owner of the same resources.
-      include: "*.yaml"
+      recurse: false
 
   destination:
     server: https://kubernetes.default.svc
