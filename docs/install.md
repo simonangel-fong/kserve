@@ -76,4 +76,7 @@ curl -X POST http://localhost:8080/openai/v1/chat/completions \
 # open webui
 kubectl -n open-webui port-forward svc/open-webui 8888:80
 
+k get node -l karpenter.sh/nodepool=gpu
+# NAME                         STATUS   ROLES    AGE   VERSION
+# ip-10-0-13-72.ec2.internal   Ready    <none>   63m   v1.36.2-eks-bca9cf6
 ```
