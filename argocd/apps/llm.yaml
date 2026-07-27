@@ -13,7 +13,7 @@ spec:
   source:
     repoURL: https://github.com/simonangel-fong/kserve.git
     targetRevision: master
-    path: argocd/apps/llm
+    path: kserve
 
   destination:
     server: https://kubernetes.default.svc
