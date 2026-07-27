@@ -1,0 +1,30 @@
+# # kserve-crd.yaml
+# # KServe CRDs only. Split from the controller so the CRDs are established
+# # before anything tries to create an InferenceService.
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: kserve-crd
+#   namespace: argocd
+#   annotations:
+#     argocd.argoproj.io/sync-wave: "2"
+# spec:
+#   project: default
+
+#   source:
+#     repoURL: ghcr.io/kserve/charts
+#     chart: kserve-crd
+#     targetRevision: "v0.19.0"
+
+#   destination:
+#     server: https://kubernetes.default.svc
+#     namespace: kserve
+
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+#     syncOptions:
+#       - CreateNamespace=true
+#       # CRDs exceed the 262144-byte last-applied-configuration annotation limit.
+#       - ServerSideApply=true
