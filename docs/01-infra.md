@@ -41,4 +41,9 @@ helm list -n argocd
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 
 kubectl -n argocd port-forward svc/argocd-server 8080:443
+
+# app-of-apps
+kubectl apply -f argocd/00-root.yaml
+
+
 ```

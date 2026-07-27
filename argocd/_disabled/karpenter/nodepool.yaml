@@ -1,9 +1,12 @@
 # Karpenter NodePool + EC2NodeClass
 #
-# Synced by Argo CD (see argocd/apps/karpenter-nodepool.yaml), not kubectl.
-# Substitute the two placeholders from `terraform output` in infra/, then commit:
-#   NODE_IAM_ROLE  <- karpenter_node_iam_role_name
-#   DISCOVERY      <- karpenter_discovery_tag
+# PARKED - not synced. Lives outside argocd/apps/, so the root Application
+# ignores it. Karpenter's controller runs without these but provisions no nodes.
+#
+# To enable: substitute the placeholders below, move this directory and
+# ../karpenter-nodepool.yaml into argocd/apps/, then commit.
+#   NODE_IAM_ROLE  -> kserve-dev-karpenter-node
+#   DISCOVERY      -> kserve-dev
 ---
 # How to build a node: AMI, IAM role, subnets, security groups.
 apiVersion: karpenter.k8s.aws/v1

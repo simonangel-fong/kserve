@@ -1,23 +1,12 @@
-# Root Application (app-of-apps).
-#
-# Bootstrap once, by hand, after the infra/ stack has installed Argo CD:
-#
+# 00-root.yaml
 #   kubectl apply -f argocd/00-root.yaml
-#
-# From then on every child Application committed under argocd/apps/ is picked up
-# and reconciled automatically - adding a component is a git commit, not a
-# terraform apply and not another kubectl.
-#
-# This file deliberately lives OUTSIDE argocd/apps/, the directory it watches,
-# so the root does not end up managing itself.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: root
   namespace: argocd
   finalizers:
-    # Keeps children from being orphaned mid-reconcile if the root is removed.
-    - resources-finalizer.argocd.argoproj.io
+    - resources-finalizer.argocd.argoproj.io/background
 spec:
   project: default
 
