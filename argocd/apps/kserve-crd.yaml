@@ -5,6 +5,8 @@ kind: Application
 metadata:
   name: kserve-crd
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/background
   annotations:
     argocd.argoproj.io/sync-wave: "2"
 spec:

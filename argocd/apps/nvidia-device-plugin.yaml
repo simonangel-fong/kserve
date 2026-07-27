@@ -5,6 +5,8 @@ kind: Application
 metadata:
   name: nvidia-device-plugin
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/background
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
