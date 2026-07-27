@@ -7,8 +7,7 @@ metadata:
   namespace: llm
 spec:
   predictor:
-    # The gpu NodePool taints its nodes; without this the pod stays Pending
-    # while Karpenter declines to provision for it.
+    # taint and tolerations: GPU
     tolerations:
       - key: nvidia.com/gpu
         effect: NoSchedule

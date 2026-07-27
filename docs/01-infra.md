@@ -5,6 +5,7 @@
 - [KServe - EKS Bootstrap](#kserve---eks-bootstrap)
   - [Infra](#infra)
   - [Argo CD](#argo-cd)
+  - [GPU node](#gpu-node)
 
 ---
 
@@ -36,7 +37,7 @@ aws eks update-kubeconfig --region us-east-1 --name kserve-dev
 
 helm list -n argocd
 # NAME    NAMESPACE       REVISION        UPDATED                                 STATUS          CHART           APP VERSION
-# argocd  argocd          1               2026-07-27 13:47:04.2911697 -0400 EDT   deployed        argo-cd-10.2.1  v3.4.5 
+# argocd  argocd          1               2026-07-27 13:47:04.2911697 -0400 EDT   deployed        argo-cd-10.2.1  v3.4.5
 
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 
@@ -45,4 +46,14 @@ kubectl -n argocd port-forward svc/argocd-server 8000:443
 # app-of-apps
 kubectl apply -f argocd/00-root.yaml
 
+```
+
+---
+
+## GPU node
+
+```sh
+kubectl run gpu-test --rm -it --restart=Never \
+  --image=nvidia/cuda:12.4.0-base-ubuntu22.04 \
+  --overrides='{"spec":{"tolerations":[{"key":"nvidia.com/gpu","operator":"Exists","effect":"NoSchedule"}],"containers":[{"name":"gpu-test","image":"nvidia/cuda:12.4.0-base-ubuntu22.04","command":["nvidia-smi"],"resources":{"limits":{"nvidia.com/gpu":"1"}}}]}}'
 ```

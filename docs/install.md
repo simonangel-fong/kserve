@@ -68,3 +68,10 @@ curl http://localhost:8080/openai/v1/chat/completions \
   -d '{"model":"qwen","messages":[{"role":"user","content":"hello"}]}'
 
 ```
+
+- debug
+
+```sh
+
+
+```
