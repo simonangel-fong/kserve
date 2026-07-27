@@ -17,7 +17,7 @@ spec:
       valuesObject:
         settings:
           clusterName: kserve-dev
-          clusterEndpoint: https://809A851E5891111FE59D6337B59622BD.gr7.us-east-1.eks.amazonaws.com
+          # clusterEndpoint: https://809A851E5891111FE59D6337B59622BD.gr7.us-east-1.eks.amazonaws.com
           interruptionQueue: Karpenter-kserve-dev
 
         nodeSelector:
