@@ -1,0 +1,16 @@
+# backend.hcl.example
+#
+# Copy to backend.hcl and fill in your values, then:
+#   terraform init -backend-config=backend.hcl
+#
+# The S3 bucket must already exist and should have versioning enabled.
+# backend.hcl itself is gitignored.
+
+bucket = "my-terraform-state-bucket"
+key    = "kserve/dev/terraform.tfstate"
+region = "us-east-1"
+
+# State locking via S3 (Terraform >= 1.10). No DynamoDB table needed.
+use_lockfile = true
+
+encrypt = true
