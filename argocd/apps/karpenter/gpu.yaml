@@ -44,7 +44,7 @@ spec:
 ---
 
 ---
-# NodePool: capacity: g4dn (T4) for inference;
+# NodePool: capacity: g6 (L4) for inference;
 apiVersion: karpenter.sh/v1
 kind: NodePool
 metadata:
@@ -77,7 +77,7 @@ spec:
           values: ["on-demand"]
         - key: karpenter.k8s.aws/instance-family
           operator: In
-          values: ["g4dn"]
+          values: ["g6"]
         # Single-GPU sizes only; multi-GPU boxes are a large jump in cost.
         - key: karpenter.k8s.aws/instance-gpu-count
           operator: In

@@ -1,11 +1,4 @@
 # inference.yaml
-# Qwen2.5-0.5B-Instruct served by the KServe huggingface runtime (vLLM backend).
-# Exposes an OpenAI-compatible API at /openai/v1/chat/completions.
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: llm
 ---
 apiVersion: serving.kserve.io/v1beta1
 kind: InferenceService

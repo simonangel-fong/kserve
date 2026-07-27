@@ -48,3 +48,23 @@ hf models info
 hf download meta-llama/Llama-3.2-1B-Instruct --local-dir ./models/llama       
 
 ```
+
+---
+
+## KServe
+
+```sh
+k get node -l node-role=gpu
+# NAME                         STATUS   ROLES    AGE     VERSION
+# ip-10-0-29-35.ec2.internal   Ready    <none>   3m47s   v1.36.2-eks-bca9cf6
+
+
+kubectl apply -f kserve/inference.yaml
+kubectl -n llm get isvc qwen-llm -w
+
+kubectl -n llm port-forward svc/qwen-llm-predictor 8080:80
+curl http://localhost:8080/openai/v1/chat/completions \
+  -H 'Content-Type: application/json' \
+  -d '{"model":"qwen","messages":[{"role":"user","content":"hello"}]}'
+
+```
